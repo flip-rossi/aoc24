@@ -19,7 +19,7 @@ JRE := java
 #JRE_FLAGS := -Xss128m -Xms512m -Xmx512m
 
 JAVA_SRC_DIR := ./src/main/java
-JAVA_OUT_DIR := ./target/classes
+JAVA_OUT_DIR := ./target/java/classes
 
 JAVA_SRCS := $(wildcard $(JAVA_SRC_DIR)/*.java)
 JAVA_BINS := $(JAVA_SRCS:$(JAVA_SRC_DIR)/%.java=$(JAVA_OUT_DIR)/%.class)
@@ -37,6 +37,8 @@ clean:
 	mvn clean
 
 # C++ goals
+cpp: $(CXX_BINS)
+
 $(CXX_OUT_DIR):
 	mkdir -p $(CXX_OUT_DIR)
 
@@ -48,6 +50,8 @@ $(CXX_BINS): $(CXX_OUT_DIR)/%: $(CXX_SRC_DIR)/%.cpp $(CXX_OUT_DIR)
 	$<
 
 # Java goals
+java: $(JAVA_BINS)
+
 $(JAVA_BINS): $(JAVA_OUT_DIR)/%.class: $(JAVA_SRC_DIR)/%.java
 	$(JAVA_BUILD_CMD)
 

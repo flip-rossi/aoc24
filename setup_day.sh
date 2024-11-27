@@ -1,6 +1,6 @@
 #!/bin/bash
 
-print_usage() {
+bad_args() {
     echo "USAGE: $0 $1 <language> [day]"
     exit 1
 }
@@ -9,7 +9,7 @@ SRC_DIR="src/main"
 TEMPLATE_DIR="templates"
 
 if [[ $# == 0 ]]; then
-    print_usage
+    bad_args
 fi
 
 lang=$1
@@ -19,7 +19,7 @@ if [[ -v 1 ]]; then
     if [[ "$1" =~ ^[0-9]+$ ]]; then
         printf -v day_padded "%02d" $1
     else
-        print_usage
+        bad_args
     fi
 else
     day_padded=$(TZ='EST5' date +%d)
