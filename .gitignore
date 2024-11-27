@@ -1,0 +1,9 @@
+.env
+inputs/example*.txt
+/target/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
