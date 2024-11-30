@@ -10,7 +10,7 @@ fn main() {
     }
 
     // Solve
-    // let answer = aoc24::solve_puzzle!();
+    // let answer = aoc_utils::solve_puzzle!();
     // println!("{answer}")
 }
 

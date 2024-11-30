@@ -9,6 +9,6 @@ edition = "2021"
 itertools = "0.13.0"
 
 [lib]
-name = "aoc23"
+name = "utils"
 path = "src/lib/rs/lib.rs"
 

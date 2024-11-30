@@ -37,20 +37,25 @@ case "$lang" in
         src_file="$SRC_DIR/java/Day$day_padded.java"
         template_file="$TEMPLATE_DIR/template.java"
         ;;
-    rust|rs|r)
+    rs|r|rust)
         lang=rs
         mkdir -p "$SRC_DIR/rs"
         src_file="$SRC_DIR/rs/day$day_padded.rs"
         template_file="$TEMPLATE_DIR/template.rs"
         ;;
-    "c++"|cpp|c)
+    cpp|c|c++)
         lang=cpp
         mkdir -p "$SRC_DIR/cpp"
         src_file="$SRC_DIR/cpp/day$day_padded.cpp"
         template_file="$TEMPLATE_DIR/template.cpp"
         ;;
+    ml|ocaml)
+        lang=ml
+        src_file="$SRC_DIR/ml/day$day_padded.ml"
+        template_file="$TEMPLATE_DIR/template.ml"
+        ;;
     *)
-        echo "Available languages: java|j, rust|rs|r, c++|cpp|c"
+        echo "Available languages: java|j, rust|rs|r, c++|cpp|c, ocaml|ml"
         exit 1
         ;;
 esac
@@ -103,6 +108,8 @@ path = \"$src_file\"" \
             >> Cargo.toml
         ;;
     #cpp) nothing ;;
+    ml)
+        sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/ml/dune"
+        ;;
 esac
-exit 42
 

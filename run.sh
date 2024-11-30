@@ -62,6 +62,9 @@ case "$lang" in
         make "day$day" &&
             "./target/cpp/day$day" < "$input"
         ;;
+    ocaml|ml)
+        DUNE_BUILD_DIR=$PWD/target/ml dune exec "day$day" < "$input"
+        ;;
     *)
         echo "Language '$lang' not supported."
         ;;
