@@ -1,16 +1,31 @@
 #!/bin/bash
 
+SRC_DIR=./src/main
+INPUT_DIR=./inputs
+
 bad_args() {
-    echo "USAGE: $0 [language] [day] <part>"
+    echo -e "USAGE: $0 [language] [day] <part> [OPTIONS...]"
+    echo "
+Available options:
+  -e       Read input from $INPUT_DIR/example.txt.
+  -s       Read input from standard input.
+  -f FILE  Read input from FILE."
     exit 1
 }
+
+while getopts 'f:es' flag; do
+    case "${flag}" in
+        e) input="$INPUT_DIR/example.txt" ;;
+        s) input="/dev/stdin" ;;
+        f) input="$OPTARG" ;;
+        *) bad_args ;;
+    esac
+done
+shift $((OPTIND - 1))
 
 is_number() {
     [[ "$1" =~ ^[0-9]+$ ]]
 }
-
-SRC_DIR=./src/main
-INPUT_DIR=./inputs
 
 if [[ $# -lt 1 ]]; then
     bad_args
@@ -31,7 +46,10 @@ else
     day=$(TZ='EST5' date +%d)
 fi
 
-input="$INPUT_DIR/input$day.txt"
+if [[ -z "$input" ]]; then
+    input="$INPUT_DIR/input$day.txt"
+fi
+echo "=====> Reading from $input"
 
 if ! $(is_number $1); then
     bad_args
@@ -43,7 +61,7 @@ if [[ ! -v lang ]]; then
     src=$(fd "day$day" | head -1)
 
     if [[ -z "$src" ]]; then
-        echo "Didn't find any source files for day $day."
+        echo "=====> Didn't find any source files for day $day."
         exit 2
     fi
 
@@ -66,7 +84,7 @@ case "$lang" in
         DUNE_BUILD_DIR=$PWD/target/ml dune exec "day$day" < "$input"
         ;;
     *)
-        echo "Language '$lang' not supported."
+        echo "=====> Language '$lang' not supported."
         ;;
 esac
 

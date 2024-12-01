@@ -15,29 +15,30 @@ public class Day${day} {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws IOException {
-        int part;
-        try { part = parseInt(args[0]); }
-        catch (NumberFormatException e) { System.err.println("Please specify part 1 or 2."); }
+        int part = parseInt(args[0]);
 
         // Parse input
         // TODO
 
         // Solve
         switch (part) {
-            case 1 -> part1();
-            case 2 -> part2();
-            default -> System.err.println("Please specify part 1 or 2.");
+            case 1 -> System.out.println(part1());
+            case 2 -> System.out.println(part2());
+            default -> {
+                System.err.println("Please specify part 1 or 2.");
+                System.exit(1);
+            }
         }
     }
 
     //=============== PART 1 ===============//
-    static void part1() {
+    static long part1() {
         // TODO
         throw new UnsupportedOperationException("TODO");
     }
 
     //=============== PART 2 ===============//
-    static void part2() {
+    static long part2() {
         // TODO
         throw new UnsupportedOperationException("TODO");
     }
