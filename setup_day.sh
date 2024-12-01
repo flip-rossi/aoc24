@@ -81,12 +81,12 @@ echo -e "\nSee the puzzle description at $url"
 # Create source code file from template and add day to Answers.md
 echo "Creating new file $src_file from template..."
 
-fetch_time=$(date '+%Y-%m-%d %R')
-template_substs='s/\${day}/'$day_padded'/g;
-                 s/\${title}/'$title'/g;
-                 s/\${url}/'$url'/g;
-                 s/\${fetch_time}/'$fetch_time'/g'
-
+fetch_time="$(date '+%Y-%m-%d %R')"
+escaped_url="${url//\//\\/}"
+template_substs='s/\$\{day\}/'$day_padded'/g;
+                 s/\$\{title\}/'$title'/g;
+                 s/\$\{url\}/'$escaped_url'/g;
+                 s/\$\{fetch_time\}/'$fetch_time'/g'
 
 if [ -e $src_file ]; then
     echo "$src_file already exists."
@@ -94,7 +94,7 @@ if [ -e $src_file ]; then
 fi
 
 cp "$template_file" $src_file
-sed "$template_substs" "$template_file" > "$src_file"
+sed -E "$template_substs" "$template_file" > "$src_file"
 echo -e "### Day $day: $title\n[Description]($url) - [Input](inputs/input$day_padded.txt)  \n**Answer 1:**   \n**Answer 2:**   \n" >> Answers.md
 
 # Do extra stuff, depending on language
