@@ -5,3 +5,8 @@ The answers for my puzzle inputs.
 **Answer 1:** 1151792  
 **Answer 2:** 21790168  
 
+### Day 2: 
+[Description](https://adventofcode.com/2024/day/2) - [Input](inputs/input02.txt)  
+**Answer 1:** 660  
+**Answer 2:** 689  
+

@@ -18,6 +18,13 @@ macro_rules! exit_msg {
     }};
 }
 
+#[macro_export]
+macro_rules! print_usage_and_exit {
+    () => {{
+        $crate::exit_msg!(1, "USAGE: {} {{1,2}}", std::env::args().nth(0).unwrap());
+    }};
+}
+
 /**
 Execute solution for a given part of the day's puzzle,
 calling the approptiate function with the passed arguments.
@@ -62,7 +69,7 @@ macro_rules! solve_puzzle {
                     _ => $crate::exit_msg!(1, "Usage: Part must be 1 or 2"),
                 }
             },
-            None => $crate::exit_msg!(1, "Usage: {} PART", std::env::args().nth(0).unwrap()),
+            None => $crate::print_usage_and_exit!(),
         }
     };
 }
