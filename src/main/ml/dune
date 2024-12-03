@@ -1,4 +1,4 @@
 (executables
- (names)
- (public_names)
- (libraries aoc_utils))
+ (names day01)
+ (public_names day01)
+ (libraries utils core str))

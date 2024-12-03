@@ -78,10 +78,10 @@ case "$lang" in
         ;;
     cpp|c|c++)
         make "day$day" &&
-            "./target/cpp/day$day" < "$input"
+            "./target/cpp/day$day" "$part" < "$input"
         ;;
     ocaml|ml)
-        DUNE_BUILD_DIR=$PWD/target/ml dune exec "day$day" < "$input"
+        DUNE_BUILD_DIR=$PWD/target/ml dune exec "day$day" "$part" < "$input"
         ;;
     *)
         echo "=====> Language '$lang' not supported."

@@ -6,6 +6,6 @@
 
 (package
  (name aoc24)
- (depends ocaml dune))
+ (depends ocaml dune core))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html
