@@ -10,3 +10,8 @@ The answers for my puzzle inputs.
 **Answer 1:** 660  
 **Answer 2:** 689  
 
+### Day 3: Mull It Over
+[Description](https://adventofcode.com/2024/day/3) - [Input](inputs/input03.txt)  
+**Answer 1:**   
+**Answer 2:**   
+

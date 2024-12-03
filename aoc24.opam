@@ -4,6 +4,8 @@ depends: [
   "ocaml"
   "dune" {>= "3.16"}
   "core"
+  "menhir"
+  "ocamllex"
   "odoc" {with-doc}
 ]
 build: [
