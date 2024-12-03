@@ -4,6 +4,6 @@
  (libraries utils core str day03_interp))
 
 (env
-  (dev
-    (flags (:standard -warn-error -A))))
-
+ (dev
+  (flags
+   (:standard -warn-error -A))))

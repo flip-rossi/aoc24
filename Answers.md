@@ -12,6 +12,6 @@ The answers for my puzzle inputs.
 
 ### Day 3: Mull It Over
 [Description](https://adventofcode.com/2024/day/3) - [Input](inputs/input03.txt)  
-**Answer 1:**   
-**Answer 2:**   
+**Answer 1:** 162813399  
+**Answer 2:** 53783319  
 

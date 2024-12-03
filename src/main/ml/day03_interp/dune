@@ -2,6 +2,6 @@
  (name day03_interp))
 
 (menhir
-  (modules parser))
+ (modules parser))
 
 (ocamllex lexer)

@@ -1,5 +1,7 @@
 type expr =
-(* | Int of int *)
-| Emp
-| Mul of int * int
-| Seq of expr * expr
+  (* | Int of int *)
+  | Emp
+  | Seq of expr * expr
+  | Mul of int * int
+  | Valid of expr
+  | Invalid of expr

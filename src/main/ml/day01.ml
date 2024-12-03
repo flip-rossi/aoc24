@@ -33,7 +33,11 @@ let () =
       match int_of_string (Sys.get_argv ()).(1) with
       | 1 -> part1
       | 2 -> part2
-      | _ -> print_endline "Part must be 1 or 2."; exit 1
-    with (Invalid_argument _) -> print_endline "Please specify a puzzle part."; exit 1
+      | _ ->
+          print_endline "Part must be 1 or 2.";
+          exit 1
+    with Invalid_argument _ ->
+      print_endline "Please specify a puzzle part.";
+      exit 1
   in
   print_endline @@ string_of_int @@ Tuple2.uncurry solve parse_input
