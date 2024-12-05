@@ -1,7 +1,7 @@
 #!/bin/bash
 
 bad_args() {
-    echo "USAGE: $0 $1 <language> [day]"
+    echo "USAGE: $0 <language> [day]"
     exit 1
 }
 
@@ -36,23 +36,27 @@ case "$lang" in
         mkdir -p "$SRC_DIR/java"
         src_file="$SRC_DIR/java/Day$day_padded.java"
         template_file="$TEMPLATE_DIR/template.java"
+        language_pretty="Java"
         ;;
     rs|r|rust)
         lang=rs
         mkdir -p "$SRC_DIR/rs"
         src_file="$SRC_DIR/rs/day$day_padded.rs"
         template_file="$TEMPLATE_DIR/template.rs"
+        language_pretty="Rust"
         ;;
     cpp|c|c++)
         lang=cpp
         mkdir -p "$SRC_DIR/cpp"
         src_file="$SRC_DIR/cpp/day$day_padded.cpp"
         template_file="$TEMPLATE_DIR/template.cpp"
+        language_pretty="C++"
         ;;
     ml|ocaml)
         lang=ml
         src_file="$SRC_DIR/ml/day$day_padded.ml"
         template_file="$TEMPLATE_DIR/template.ml"
+        language_pretty="OCaml"
         ;;
     *)
         echo "Available languages: java|j, rust|rs|r, c++|cpp|c, ocaml|ml"
@@ -95,7 +99,7 @@ fi
 
 cp "$template_file" $src_file
 sed -E "$template_substs" "$template_file" > "$src_file"
-echo -e "### Day $day: $title\n[Description]($url) - [Input](inputs/input$day_padded.txt)  \n**Answer 1:**   \n**Answer 2:**   \n" >> Answers.md
+echo "| [Day $day: $title]($url) |           |           | [$language_pretty]($src_file) |" >> Answers.md
 
 # Do extra stuff, depending on language
 case "$lang" in

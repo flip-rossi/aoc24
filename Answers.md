@@ -1,8 +1,10 @@
+# Answers
+
 The answers for my puzzle inputs.
 
-| Day                                                              | Answer 1  | Answer 2 | Languages                        |
-| ---------------------------------------------------------------- | ---------:| --------:| -------------------------------- |
-| [Day 1: Historian Hysteria](https://adventofcode.com/2024/day/1) |   1151792 | 21790168 | [Java](src/main/java/Day01.java), [OCaml](src/main/ml/day01.ml) |
-| [Day 2: Red-Nosed Reports](https://adventofcode.com/2024/day/2)  |       660 |      689 | [Rust](src/main/rs/day02.rs)     |
-| [Day 3: Mull It Over](https://adventofcode.com/2024/day/3)       | 162813399 | 53783319 | [OCaml](src/main/ml/day03.ml)    |
-| [Day 4: Ceres Search](https://adventofcode.com/2024/day/4)       |      2545 |     1886 | [C++](src/main/cpp/day04.cpp)    |
+| Day                                                              | Answer 1  | Answer 2  | Languages                        |
+| ---------------------------------------------------------------- | ---------:| ---------:| -------------------------------- |
+| [Day 1: Historian Hysteria](https://adventofcode.com/2024/day/1) |   1151792 |  21790168 | [Java](src/main/java/Day01.java), [OCaml](src/main/ml/day01.ml) |
+| [Day 2: Red-Nosed Reports](https://adventofcode.com/2024/day/2)  |       660 |       689 | [Rust](src/main/rs/day02.rs)     |
+| [Day 3: Mull It Over](https://adventofcode.com/2024/day/3)       | 162813399 |  53783319 | [OCaml](src/main/ml/day03.ml)    |
+| [Day 4: Ceres Search](https://adventofcode.com/2024/day/4)       |      2545 |      1886 | [C++](src/main/cpp/day04.cpp)    |
