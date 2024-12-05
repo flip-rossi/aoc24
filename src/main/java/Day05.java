@@ -6,9 +6,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 
 /**
  * <h1>Day 05 - Print Queue</h1>
@@ -47,7 +50,7 @@ public class Day05 {
         // Solve
         switch (part) {
             case 1 -> System.out.println(part1(outEdges, inDegrees, manuals));
-            case 2 -> System.out.println(part2());
+            case 2 -> System.out.println(part2(outEdges, inDegrees, manuals));
             default -> {
                 System.err.println("Please specify part 1 or 2.");
                 System.exit(1);
@@ -60,38 +63,91 @@ public class Day05 {
             List<int[]> manuals) {
         var midSum = 0;
 
-        outer: for (var man : manuals) {
-            var currInDegrees = new HashMap<Integer, Integer>();
-
-            for (int page : man) {
-                for (int nextPage : outEdges.getOrDefault(page, List.of())) {
-                    currInDegrees.put(nextPage,
-                        currInDegrees.getOrDefault(nextPage, 0) + 1);
-                    //System.out.println(nextPage + " " + currInDegrees.get(nextPage));
-                }
-            }
-
-            for (int page : man) {
-                System.err.print(page + "(" + currInDegrees.get(page)+"), ");
-                if (currInDegrees.containsKey(page) && currInDegrees.get(page) > 0) {
-                    System.err.println("OUT"); continue outer;
-                }
-                for (int nextPage : outEdges.getOrDefault(page, List.of()))
-                    currInDegrees.put(nextPage, currInDegrees.get(nextPage) - 1);
-            }
-
-            //System.out.println(Arrays.stream(man).mapToObj(x -> ""+x).reduce((a, b) -> a + ", " + b));
-            System.err.println("DONE");
-            midSum += man[man.length/2];
+        for (var man : manuals) {
+            if (isOrdered(outEdges, man))
+                midSum += man[man.length/2];
         }
 
         return midSum;
     }
 
+    private static boolean isOrdered(Map<Integer, List<Integer>> outEdges, int[] man) {
+        var currInDegrees = new HashMap<Integer, Integer>();
+
+        for (int page : man) {
+            for (int nextPage : outEdges.getOrDefault(page, List.of())) {
+                currInDegrees.put(nextPage,
+                    currInDegrees.getOrDefault(nextPage, 0) + 1);
+                //System.out.println(nextPage + " " + currInDegrees.get(nextPage));
+            }
+        }
+
+        for (int page : man) {
+            System.err.print(page + "(" + currInDegrees.get(page)+"), ");
+            if (currInDegrees.containsKey(page) && currInDegrees.get(page) > 0) {
+                System.err.println("OUT");
+                return false;
+            }
+            for (int nextPage : outEdges.getOrDefault(page, List.of()))
+            currInDegrees.put(nextPage, currInDegrees.get(nextPage) - 1);
+        }
+        System.err.println("DONE");
+
+        return true;
+    }
+
     //=============== PART 2 ===============//
-    static long part2() {
-        // TODO
-        throw new UnsupportedOperationException("TODO");
+    static long part2(Map<Integer, List<Integer>> outEdges, Map<Integer, Integer> inDegrees,
+            List<int[]> manuals) {
+        int midSum = 0;
+
+        for (var man : manuals) {
+            if (isOrdered(outEdges, man))
+                continue;
+
+            midSum += topoSortedMid(outEdges, inDegrees, man);
+        }
+
+        return midSum;
+    }
+
+    private static int topoSortedMid(Map<Integer, List<Integer>> outEdges,
+                Map<Integer, Integer> inDegrees, int[] man) {
+        int[] perm = new int[man.length];
+        int permSize = 0;
+        var ready = new PriorityQueue<Integer>(man.length);
+        var currInDegs = new HashMap<Integer, Integer>();
+
+        for (int page : man) {
+            currInDegs.putIfAbsent(page, 0);
+            for (var nextPage : outEdges.getOrDefault(page, List.of())) {
+                currInDegs.compute(nextPage, (k, deg) -> deg == null ? 1 : deg + 1);
+            }
+        }
+
+        for (int page : man) {
+            if (currInDegs.get(page) == 0)
+                ready.add(page);
+        }
+
+        do {
+            var page = ready.remove();
+            perm[permSize++] = page;
+
+            /*ghost*/ int newPages = 0;
+            for (var nextPage : outEdges.getOrDefault(page, List.of())) {
+                if (currInDegs.computeIfPresent(nextPage, (k, v) -> v - 1) == 0) {
+                    System.err.println("Adding to ready: " + nextPage);
+                    ready.add(nextPage);
+                    newPages++;
+                }
+            }
+            System.err.println("NEW PAGES: " + newPages);
+        } while (permSize <= man.length/2);
+
+        System.err.println(Arrays.stream(perm).mapToObj(x->""+x).reduce((a,b)->a+" "+b));
+        System.err.println("Returning: " + perm[permSize-1]);
+        return perm[permSize-1];
     }
 
 }
