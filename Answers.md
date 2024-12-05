@@ -1,22 +1,8 @@
 The answers for my puzzle inputs.
 
-### Day 1: Historian Hysteria
-[Description](https://adventofcode.com/2024/day/1) - [Input](inputs/input01.txt)  
-**Answer 1:** 1151792  
-**Answer 2:** 21790168  
-
-### Day 2: Red-Nosed Reports
-[Description](https://adventofcode.com/2024/day/2) - [Input](inputs/input02.txt)  
-**Answer 1:** 660  
-**Answer 2:** 689  
-
-### Day 3: Mull It Over
-[Description](https://adventofcode.com/2024/day/3) - [Input](inputs/input03.txt)  
-**Answer 1:** 162813399  
-**Answer 2:** 53783319  
-
-### Day 4: Ceres Search
-[Description](https://adventofcode.com/2024/day/4) - [Input](inputs/input04.txt)  
-**Answer 1:** 2545  
-**Answer 2:** 1886  
-
+| Day                                                              | Answer 1  | Answer 2 | Languages   |
+| ---------------------------------------------------------------- | ---------:| --------:| ----------- |
+| [Day 1: Historian Hysteria](https://adventofcode.com/2024/day/1) |   1151792 | 21790168 | Java, OCaml |
+| [Day 2: Red-Nosed Reports](https://adventofcode.com/2024/day/2)  |       660 |      689 | Rust        |
+| [Day 3: Mull It Over](https://adventofcode.com/2024/day/3)       | 162813399 | 53783319 | OCaml       |
+| [Day 4: Ceres Search](https://adventofcode.com/2024/day/4)       |      2545 |     1886 | C++         |

@@ -1,6 +1,6 @@
 
 These are my solutions for the [2024 edition](https://adventofcode.com/2024) of the annual event **Advent of Code**.
-The code for each solution is in src/main/, in either Java, Rust, or C++.
+The code for each solution is in src/main/, in either Java, Rust, C++, or OCaml.
 
 ### Helper scripts
 
