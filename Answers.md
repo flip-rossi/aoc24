@@ -5,7 +5,7 @@ The answers for my puzzle inputs.
 **Answer 1:** 1151792  
 **Answer 2:** 21790168  
 
-### Day 2: 
+### Day 2: Red-Nosed Reports
 [Description](https://adventofcode.com/2024/day/2) - [Input](inputs/input02.txt)  
 **Answer 1:** 660  
 **Answer 2:** 689  
@@ -18,5 +18,5 @@ The answers for my puzzle inputs.
 ### Day 4: Ceres Search
 [Description](https://adventofcode.com/2024/day/4) - [Input](inputs/input04.txt)  
 **Answer 1:** 2545  
-**Answer 2:**   
+**Answer 2:** 1886  
 

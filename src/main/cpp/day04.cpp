@@ -4,7 +4,7 @@
  * https://adventofcode.com/2024/day/4
  *
  *  Start: 2024-12-04 12:31
- * Finish: TODO
+ * Finish: 2024-12-05 01:05
  */
 
 #include <cstddef>
@@ -61,9 +61,31 @@ int64_t part1(vector<string> lines) {
     return count;
 }
 
-int64_t part2() {
-    // TODO
-    return -1;
+const string MAS = "MAS";
+
+int64_t part2(vector<string> lines) {
+    int mases {0};
+
+    size_t n {lines.size()},
+           m {lines[0].size()};
+    for (size_t i {1}; i < n - 1; i++) {
+        for (size_t j {1}; j < m - 1; j++) {
+            if (lines[i][j] != 'A')
+                continue;
+
+            int tl = lines[i - 1][j - 1];
+            int br = lines[i + 1][j + 1];
+            int tr = lines[i - 1][j + 1];
+            int bl = lines[i + 1][j - 1];
+            if ((tl == 'M' && br != 'S') || (tl == 'S' && br != 'M') || (tl != 'S' && tl != 'M')
+                    || (tr == 'M' && bl != 'S') || (tr == 'S' && bl != 'M') || (tr != 'S' && tr != 'M'))
+                continue;
+
+            mases++;
+        }
+    }
+
+    return mases;
 }
 
 int main(int argc, char *argv[]) {
@@ -82,7 +104,7 @@ int main(int argc, char *argv[]) {
             cout << part1(lines) << endl;
             break;
         case 2:
-            cout << part2() << endl;
+            cout << part2(lines) << endl;
             break;
         default:
             std::cerr << "Part must be 1 or 2." << endl;
