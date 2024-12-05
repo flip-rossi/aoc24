@@ -24,7 +24,7 @@ JAVA_OUT_DIR := ./target/java/classes
 JAVA_SRCS := $(wildcard $(JAVA_SRC_DIR)/*.java)
 JAVA_BINS := $(JAVA_SRCS:$(JAVA_SRC_DIR)/%.java=$(JAVA_OUT_DIR)/%.class)
 
-# TODO Rust
+# TODO Rust and OCaml?
 
 ALL_BINS = $(CXX_BINS) $(JAVA_BINS)
 
@@ -45,9 +45,8 @@ $(CXX_OUT_DIR):
 $(CXX_BINS): $(CXX_OUT_DIR)/%: $(CXX_SRC_DIR)/%.cpp $(CXX_OUT_DIR)
 	$(CXX) $(CXX_FLAGS) $< -o $@
 
-# Compile and run an exercise based on name
+# Compile specific exercise
 %:: $(CXX_OUT_DIR)/% ;
-#	$<
 
 # Java goals
 java: $(JAVA_BINS)
