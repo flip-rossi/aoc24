@@ -15,3 +15,8 @@ The answers for my puzzle inputs.
 **Answer 1:** 162813399  
 **Answer 2:** 53783319  
 
+### Day 4: Ceres Search
+[Description](https://adventofcode.com/2024/day/4) - [Input](inputs/input04.txt)  
+**Answer 1:** 2545  
+**Answer 2:**   
+

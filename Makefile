@@ -46,8 +46,8 @@ $(CXX_BINS): $(CXX_OUT_DIR)/%: $(CXX_SRC_DIR)/%.cpp $(CXX_OUT_DIR)
 	$(CXX) $(CXX_FLAGS) $< -o $@
 
 # Compile and run an exercise based on name
-%:: $(CXX_OUT_DIR)/%
-	$<
+%:: $(CXX_OUT_DIR)/% ;
+#	$<
 
 # Java goals
 java: $(JAVA_BINS)
