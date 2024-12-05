@@ -8,4 +8,4 @@ The answers for my puzzle inputs.
 | [Day 2: Red-Nosed Reports](https://adventofcode.com/2024/day/2)  |       660 |       689 | [Rust](src/main/rs/day02.rs)     |
 | [Day 3: Mull It Over](https://adventofcode.com/2024/day/3)       | 162813399 |  53783319 | [OCaml](src/main/ml/day03.ml)    |
 | [Day 4: Ceres Search](https://adventofcode.com/2024/day/4)       |      2545 |      1886 | [C++](src/main/cpp/day04.cpp)    |
-| [Day 5: Print Queue](https://adventofcode.com/2024/day/5)        |      4959 |           | [Java](src/main/java/Day05.java) |
+| [Day 5: Print Queue](https://adventofcode.com/2024/day/5)        |      4959 |      4655 | [Java](src/main/java/Day05.java) |

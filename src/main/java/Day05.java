@@ -6,19 +6,17 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.stream.Collectors;
 
 /**
  * <h1>Day 05 - Print Queue</h1>
  * https://adventofcode.com/2024/day/5
  * <p>
  *  Start: 2024-12-05 08:37 <br>
- * Finish: TODO
+ * Finish: 2024-12-05 19:54
  */
 public class Day05 {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -27,8 +25,6 @@ public class Day05 {
         int part = parseInt(args[0]);
 
         var outEdges = new HashMap<Integer, List<Integer>>();
-        var inDegrees = new HashMap<Integer, Integer>();
-
         var manuals = new LinkedList<int[]>();
 
         // Parse input
@@ -38,7 +34,6 @@ public class Day05 {
             var a = parseInt(ws[0]);
             var b = parseInt(ws[1]);
             outEdges.computeIfAbsent(a, k -> new LinkedList<>()).add(b);
-            inDegrees.put(b, inDegrees.getOrDefault(b, 0) + 1);
         }
         // Pages
         for (String line = in.readLine(); line != null; line = in.readLine()) {
@@ -49,8 +44,8 @@ public class Day05 {
 
         // Solve
         switch (part) {
-            case 1 -> System.out.println(part1(outEdges, inDegrees, manuals));
-            case 2 -> System.out.println(part2(outEdges, inDegrees, manuals));
+            case 1 -> System.out.println(part1(outEdges, manuals));
+            case 2 -> System.out.println(part2(outEdges, manuals));
             default -> {
                 System.err.println("Please specify part 1 or 2.");
                 System.exit(1);
@@ -59,8 +54,7 @@ public class Day05 {
     }
 
     //=============== PART 1 ===============//
-    static long part1(Map<Integer, List<Integer>> outEdges, Map<Integer, Integer> inDegrees,
-            List<int[]> manuals) {
+    static long part1(Map<Integer, List<Integer>> outEdges, List<int[]> manuals) {
         var midSum = 0;
 
         for (var man : manuals) {
@@ -78,7 +72,6 @@ public class Day05 {
             for (int nextPage : outEdges.getOrDefault(page, List.of())) {
                 currInDegrees.put(nextPage,
                     currInDegrees.getOrDefault(nextPage, 0) + 1);
-                //System.out.println(nextPage + " " + currInDegrees.get(nextPage));
             }
         }
 
@@ -97,25 +90,30 @@ public class Day05 {
     }
 
     //=============== PART 2 ===============//
-    static long part2(Map<Integer, List<Integer>> outEdges, Map<Integer, Integer> inDegrees,
-            List<int[]> manuals) {
+    static long part2(Map<Integer, List<Integer>> outEdges, List<int[]> manuals) {
         int midSum = 0;
 
         for (var man : manuals) {
             if (isOrdered(outEdges, man))
                 continue;
 
-            midSum += topoSortedMid(outEdges, inDegrees, man);
+            midSum += topoSortedMid(outEdges, man);
         }
 
         return midSum;
     }
 
-    private static int topoSortedMid(Map<Integer, List<Integer>> outEdges,
-                Map<Integer, Integer> inDegrees, int[] man) {
-        int[] perm = new int[man.length];
-        int permSize = 0;
-        var ready = new PriorityQueue<Integer>(man.length);
+    private static int topoSortedMid(Map<Integer, List<Integer>> outEdges, int[] man) {
+        var perm = new ArrayList<Integer>(man.length/2 + 1);
+        var ready = new PriorityQueue<Integer>(man.length, (a, b) -> {
+            int aIdx = 0;
+            while (aIdx < man.length && man[aIdx] != a)
+                aIdx++;
+            int bIdx = 0;
+            while (bIdx < man.length && man[bIdx] != b)
+                bIdx++;
+            return aIdx - bIdx;
+        });
         var currInDegs = new HashMap<Integer, Integer>();
 
         for (int page : man) {
@@ -132,7 +130,7 @@ public class Day05 {
 
         do {
             var page = ready.remove();
-            perm[permSize++] = page;
+            perm.add(page);
 
             /*ghost*/ int newPages = 0;
             for (var nextPage : outEdges.getOrDefault(page, List.of())) {
@@ -143,11 +141,11 @@ public class Day05 {
                 }
             }
             System.err.println("NEW PAGES: " + newPages);
-        } while (permSize <= man.length/2);
+        } while (perm.size() <= man.length/2);
 
-        System.err.println(Arrays.stream(perm).mapToObj(x->""+x).reduce((a,b)->a+" "+b));
-        System.err.println("Returning: " + perm[permSize-1]);
-        return perm[permSize-1];
+        System.err.println(perm.stream().map(x->""+x).reduce((a,b)->a+" "+b));
+        System.err.println("Returning: " + perm.getLast());
+        return perm.getLast();
     }
 
 }
