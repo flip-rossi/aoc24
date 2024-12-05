@@ -104,7 +104,6 @@ public class Day05 {
     }
 
     private static int topoSortedMid(Map<Integer, List<Integer>> outEdges, int[] man) {
-        var perm = new ArrayList<Integer>(man.length/2 + 1);
         var ready = new PriorityQueue<Integer>(man.length, (a, b) -> {
             int aIdx = 0;
             while (aIdx < man.length && man[aIdx] != a)
@@ -128,9 +127,12 @@ public class Day05 {
                 ready.add(page);
         }
 
+        int nProcessed = 0;
+        int last;
         do {
             var page = ready.remove();
-            perm.add(page);
+            last = page;
+            nProcessed++;
 
             /*ghost*/ int newPages = 0;
             for (var nextPage : outEdges.getOrDefault(page, List.of())) {
@@ -141,11 +143,9 @@ public class Day05 {
                 }
             }
             System.err.println("NEW PAGES: " + newPages);
-        } while (perm.size() <= man.length/2);
+        } while (nProcessed <= man.length/2);
 
-        System.err.println(perm.stream().map(x->""+x).reduce((a,b)->a+" "+b));
-        System.err.println("Returning: " + perm.getLast());
-        return perm.getLast();
+        return last;
     }
 
 }
