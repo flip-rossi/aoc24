@@ -1,20 +1,22 @@
 {
 open Parser
+open Core
 }
 
 let digit = ['0'-'9']
 let int = '-'? digit+
-let mul = "mul"
-let do = "do"
-let dont = "don't"
+let do = "do()"
+let dont = "don't()"
 
 rule read =
   parse
-    | "(" { LPAREN }
-    | ")" { RPAREN }
-    | "," { COMMA }
-    | int { INT (int_of_string (Lexing.lexeme lexbuf)) }
-    | mul { MUL }
+    | "mul(" int "," int ")" { MUL (
+        let str = Lexing.lexeme lexbuf in
+        let l = String.split_on_chars ~on:['('; ','; ')'] str in
+        match l with
+        | [_; x; y; _] -> (int_of_string x, int_of_string y)
+        | _ -> assert false
+    )}
     | do { DO }
     | dont { DONT }
     | eof { EOF }

@@ -9,26 +9,24 @@ open Day03_interp
 open Ast
 open Parse
 
-let parsed_input = In_channel.input_all In_channel.stdin |> parse |> simpl
+let parsed_input = In_channel.input_all In_channel.stdin |> parse (* |> simpl *)
 
 let part1 expr =
   let rec sum_muls e =
     match e with
-    | Emp -> 0
-    | Mul (x, y) -> x * y
-    | Seq (e1, e2) -> sum_muls e1 + sum_muls e2
-    | Valid e1 | Invalid e1 -> sum_muls e1
+    | [] -> 0
+    | Mul (x, y) :: is -> x * y + sum_muls is
+    | _::is -> sum_muls is
   in
   sum_muls expr
 
 let part2 expr =
   let rec sum_muls valid expr =
     match expr with
-    | Emp -> 0
-    | Mul (x, y) -> if valid then x * y else 0
-    | Valid e1 -> sum_muls true e1
-    | Invalid e1 -> sum_muls false e1
-    | Seq (e1, e2) -> sum_muls valid e1 + sum_muls valid e2
+    | [] -> 0
+    | Mul (x, y) :: is -> (if valid then x * y else 0) + sum_muls valid is
+    | Valid::is -> sum_muls true is
+    | Invalid::is -> sum_muls false is
   in
   sum_muls true expr
 
@@ -45,4 +43,5 @@ let () =
       print_endline "Please specify a puzzle part.";
       exit 1
   in
+  prerr_endline @@ Ast.string_of_expr parsed_input;
   print_endline @@ string_of_int @@ solve parsed_input
