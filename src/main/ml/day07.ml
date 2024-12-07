@@ -2,7 +2,7 @@
   Day 7 - Bridge Repair
   https://adventofcode.com/2024/day/7
    Start: 2024-12-07 19:46
-  Finish: TODO
+  Finish: 2024-12-07 23:17
 *)
 open! Core
 
@@ -10,7 +10,7 @@ open! Core
 let parsed_input =
   let open Str in let open List in
   In_channel.input_lines In_channel.stdin
-  |> map ~f:(fun s -> split (regexp ": \| ") s |> map ~f:int_of_string)
+  |> map ~f:(fun s -> split (regexp ": \\| ") s |> map ~f:int_of_string)
   |> map ~f:(fun ws ->
     match ws with
     | x::xs -> (x, xs)
@@ -27,7 +27,16 @@ let part1 tests =
   List.fold ~init:0 ~f:(fun acc (v, nums) -> acc + if valid v nums then v else 0) tests
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-let part2 tests = raise (Invalid_argument "Part 2 not solved yet.")
+let part2 tests =
+  let rec valid tVal nums =
+    match nums with
+    | [] -> tVal = 0
+    | [x] -> tVal = x
+    | x::y::xs -> valid tVal ((x * y) :: xs) || valid tVal ((x + y)::xs) ||
+      let conc = int_of_string (string_of_int x ^ string_of_int y) in
+      valid tVal (conc::xs)
+  in
+  List.fold ~init:0 ~f:(fun acc (v, nums) -> acc + if valid v nums then v else 0) tests
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
 let () =
