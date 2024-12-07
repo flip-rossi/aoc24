@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  *  Start: ${fetch_time} <br>
  * Finish: TODO
  */
-public class Day${day} {
+public class Day${day_padded} {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws IOException {

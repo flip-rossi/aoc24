@@ -117,3 +117,15 @@ path = \"$src_file\"" \
         ;;
 esac
 
+# Open puzzle in browser and editor
+# TODO pass script argument to do this instead
+
+xdg_open_background() {
+    url="$1"
+    nohup xdg-open "$url" &> /dev/null &
+    disown
+}
+
+xdg_open_background "$url"
+xdg_open_background "$src_file"
+
