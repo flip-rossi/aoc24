@@ -3,16 +3,16 @@ import static java.lang.Integer.parseInt;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import aoc.BiRangeIter;
 
 /**
  * <h1>Day 6 - Guard Gallivant</h1>
  * https://adventofcode.com/2024/day/6
  * <p>
  *  Start: 2024-12-08 16:03 <br>
- * Finish: TODO
+ * Finish: 2024-12-08 18:16
  */
 public class Day06 {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -68,6 +68,18 @@ public class Day06 {
         }
     }
 
+    static int pickDir(boolean[][] obstacles, int x, int y, int currDir) {
+        int dir = currDir;
+        int nextX = x + DIRS[dir][0], nextY = y + DIRS[dir][1];
+        while (0 <= nextX && nextX < obstacles[0].length && 0 <= nextY && nextY < obstacles.length
+                && obstacles[nextY][nextX]) {
+            dir = (dir + 1) % N_DIRS;
+            nextX = x + DIRS[dir][0];
+            nextY = y + DIRS[dir][1];
+        }
+        return dir;
+    }
+
     //=============== PART 1 ===============//
     static long part1(boolean[][] obstacles, int x0, int y0, int dir0) {
         int n = obstacles.length, m = obstacles[0].length;
@@ -75,7 +87,6 @@ public class Day06 {
         long count = 0;
         int x = x0, y = y0;
         int dir = dir0;
-        int dx = DIRS[dir][0], dy = DIRS[dir][1];
 
         boolean[][] visited = new boolean[n][m];
         while (0 <= x && x < m && 0 <= y && y < n) {
@@ -84,16 +95,9 @@ public class Day06 {
                 count++;
             }
 
-            int nextX = x + dx, nextY = y + dy;
-            if (0 <= nextX && nextX < m && 0 <= nextY && nextY < n
-                    && obstacles[nextY][nextX]) {
-                dir = (dir + 1) % N_DIRS;
-                dx = DIRS[dir][0];
-                dy = DIRS[dir][1];
-            }
-
-            x += dx;
-            y += dy;
+            dir = pickDir(obstacles, x, y, dir);
+            x += DIRS[dir][0];
+            y += DIRS[dir][1];
         }
 
         return count;
@@ -107,8 +111,8 @@ public class Day06 {
         boolean[][] visited = getVisited(obstacles, x0, y0, dir0);
 
         // brute force
-        for (var p : new BiRangeIter(0, n, 0, m)) {
-            if (visited[p.i][p.j]) {
+        for (var p : BiRangeIter.of(0, n, 0, m)) {
+            if (visited[p.i][p.j] && (p.i != y0 || p.j != x0)) {
                 obstacles[p.i][p.j] = true;
                 if (loops(obstacles, x0, y0, dir0))
                     count++;
@@ -116,7 +120,6 @@ public class Day06 {
             }
         }
 
-        // TODO Answer 1926 too high
         return count;
     }
 
@@ -125,7 +128,6 @@ public class Day06 {
 
         int x = x0, y = y0;
         int dir = dir0;
-        int dx = DIRS[dir][0], dy = DIRS[dir][1];
 
         boolean[][][] visited = new boolean[n][m][N_DIRS];
         while (0 <= x && x < m && 0 <= y && y < n) {
@@ -134,16 +136,9 @@ public class Day06 {
 
             visited[y][x][dir] = true;
 
-            int nextX = x + dx, nextY = y + dy;
-            if (0 <= nextX && nextX < m && 0 <= nextY && nextY < n
-                    && obstacles[nextY][nextX]) {
-                dir = (dir + 1) % N_DIRS;
-                dx = DIRS[dir][0];
-                dy = DIRS[dir][1];
-            }
-
-            x += dx;
-            y += dy;
+            dir = pickDir(obstacles, x, y, dir);
+            x += DIRS[dir][0];
+            y += DIRS[dir][1];
         }
 
         return false;
@@ -154,22 +149,14 @@ public class Day06 {
 
         int x = x0, y = y0;
         int dir = dir0;
-        int dx = DIRS[dir][0], dy = DIRS[dir][1];
 
         boolean[][] visited = new boolean[n][m];
         while (0 <= x && x < m && 0 <= y && y < n) {
             visited[y][x] = true;
 
-            int nextX = x + dx, nextY = y + dy;
-            if (0 <= nextX && nextX < m && 0 <= nextY && nextY < n
-                    && obstacles[nextY][nextX]) {
-                dir = (dir + 1) % N_DIRS;
-                dx = DIRS[dir][0];
-                dy = DIRS[dir][1];
-            }
-
-            x += dx;
-            y += dy;
+            dir = pickDir(obstacles, x, y, dir);
+            x += DIRS[dir][0];
+            y += DIRS[dir][1];
         }
 
         return visited;
@@ -177,53 +164,3 @@ public class Day06 {
 
 }
 
-class IntPair {
-    public final int i, j;
-    public IntPair(int i, int j) {
-        this.i = i;
-        this.j = j;
-    }
-}
-
-class BiRangeIter implements Iterator<IntPair>, Iterable<IntPair>, Cloneable {
-    private int i;
-    private int j;
-
-    private final int iLimit;
-    private final int jLimit;
-
-    public BiRangeIter(int i0, int iLimit, int j0, int jLimit) {
-        this.i = i0;
-        this.iLimit = iLimit;
-        this.j = j0;
-        this.jLimit = jLimit;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return i < iLimit;
-    }
-
-    @Override
-    public IntPair next() throws NoSuchElementException {
-        if (!hasNext())
-            throw new NoSuchElementException();
-        var next = new IntPair(i, j);
-        if (++j >= jLimit) {
-            i++;
-            j = 0;
-        }
-        return next;
-    }
-
-    @Override
-    public BiRangeIter iterator() {
-        return this.clone();
-    }
-
-    @Override
-    public BiRangeIter clone() {
-        return new BiRangeIter(i, iLimit, j, jLimit);
-    }
-
-}
