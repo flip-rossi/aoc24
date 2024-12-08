@@ -3,6 +3,8 @@ import static java.lang.Integer.parseInt;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +60,7 @@ public class Day06 {
         int part = parseInt(args[0]);
         switch (part) {
             case 1 -> System.out.println(part1(obstacles, x0, y0, dir0));
-            case 2 -> System.out.println(part2());
+            case 2 -> System.out.println(part2(obstacles, x0, y0, dir0));
             default -> {
                 System.err.println("Part must be 1 or 2.");
                 System.exit(1);
@@ -98,9 +100,130 @@ public class Day06 {
     }
 
     //=============== PART 2 ===============//
-    static long part2() {
-        // TODO
-        throw new UnsupportedOperationException("TODO");
+    static long part2(boolean[][] obstacles, int x0, int y0, int dir0) {
+        long count = 0;
+        int n = obstacles.length, m = obstacles[0].length;
+
+        boolean[][] visited = getVisited(obstacles, x0, y0, dir0);
+
+        // brute force
+        for (var p : new BiRangeIter(0, n, 0, m)) {
+            if (visited[p.i][p.j]) {
+                obstacles[p.i][p.j] = true;
+                if (loops(obstacles, x0, y0, dir0))
+                    count++;
+                obstacles[p.i][p.j] = false;
+            }
+        }
+
+        // TODO Answer 1926 too high
+        return count;
+    }
+
+    static boolean loops(boolean[][] obstacles, int x0, int y0, int dir0) {
+        int n = obstacles.length, m = obstacles[0].length;
+
+        int x = x0, y = y0;
+        int dir = dir0;
+        int dx = DIRS[dir][0], dy = DIRS[dir][1];
+
+        boolean[][][] visited = new boolean[n][m][N_DIRS];
+        while (0 <= x && x < m && 0 <= y && y < n) {
+            if (visited[y][x][dir])
+                return true;
+
+            visited[y][x][dir] = true;
+
+            int nextX = x + dx, nextY = y + dy;
+            if (0 <= nextX && nextX < m && 0 <= nextY && nextY < n
+                    && obstacles[nextY][nextX]) {
+                dir = (dir + 1) % N_DIRS;
+                dx = DIRS[dir][0];
+                dy = DIRS[dir][1];
+            }
+
+            x += dx;
+            y += dy;
+        }
+
+        return false;
+    }
+
+    static boolean[][] getVisited(boolean[][] obstacles, int x0, int y0, int dir0) {
+        int n = obstacles.length, m = obstacles[0].length;
+
+        int x = x0, y = y0;
+        int dir = dir0;
+        int dx = DIRS[dir][0], dy = DIRS[dir][1];
+
+        boolean[][] visited = new boolean[n][m];
+        while (0 <= x && x < m && 0 <= y && y < n) {
+            visited[y][x] = true;
+
+            int nextX = x + dx, nextY = y + dy;
+            if (0 <= nextX && nextX < m && 0 <= nextY && nextY < n
+                    && obstacles[nextY][nextX]) {
+                dir = (dir + 1) % N_DIRS;
+                dx = DIRS[dir][0];
+                dy = DIRS[dir][1];
+            }
+
+            x += dx;
+            y += dy;
+        }
+
+        return visited;
+    }
+
+}
+
+class IntPair {
+    public final int i, j;
+    public IntPair(int i, int j) {
+        this.i = i;
+        this.j = j;
+    }
+}
+
+class BiRangeIter implements Iterator<IntPair>, Iterable<IntPair>, Cloneable {
+    private int i;
+    private int j;
+
+    private final int iLimit;
+    private final int jLimit;
+
+    public BiRangeIter(int i0, int iLimit, int j0, int jLimit) {
+        this.i = i0;
+        this.iLimit = iLimit;
+        this.j = j0;
+        this.jLimit = jLimit;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return i < iLimit;
+    }
+
+    @Override
+    public IntPair next() throws NoSuchElementException {
+        if (!hasNext())
+            throw new NoSuchElementException();
+        var next = new IntPair(i, j);
+        if (++j >= jLimit) {
+            i++;
+            j = 0;
+        }
+        return next;
+    }
+
+    @Override
+    public BiRangeIter iterator() {
+        return this.clone();
+    }
+
+    @Override
+    public BiRangeIter clone() {
+        return new BiRangeIter(i, iLimit, j, jLimit);
     }
 
 }
