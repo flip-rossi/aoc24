@@ -88,6 +88,7 @@ echo "Creating new file $src_file from template..."
 fetch_time="$(date '+%Y-%m-%d %R')"
 escaped_url="${url//\//\\/}"
 template_substs='s/\$\{day\}/'$day'/g;
+                 s/\$\{day_padded\}/'$day_padded'/g;
                  s/\$\{title\}/'$title'/g;
                  s/\$\{url\}/'$escaped_url'/g;
                  s/\$\{fetch_time\}/'$fetch_time'/g'
