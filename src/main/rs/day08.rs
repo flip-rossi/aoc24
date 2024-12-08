@@ -1,7 +1,7 @@
 //! Day 8 - Resonant Collinearity
 //! https://adventofcode.com/2024/day/8
 //!  Start: 2024-12-08 10:42
-//! Finish: TODO
+//! Finish: 2024-12-08 12:29
 
 use std::{collections::HashMap, env::args, io::stdin, usize};
 
@@ -29,7 +29,7 @@ fn main() {
     // Solve
     let answer = match args().nth(1).and_then(|s| i32::from_str_radix(&s, 10).ok()) {
         Some(1) => part1(antennae, x_len, y_len),
-        Some(2) => part2(),
+        Some(2) => part2(antennae, x_len, y_len),
         _ => utils::print_usage_and_exit!(),
     };
     println!("{answer}")
@@ -39,7 +39,8 @@ fn main() {
 fn part1(antennae: HashMap<char, Vec<(i32, i32)>>, x_len: i32, y_len: i32) -> i64 {
     let (x_lims, y_lims) = (0..x_len, 0..y_len);
     let mut found = vec![vec![false; x_len as usize]; y_len as usize];
-    antennae.iter()
+    antennae
+        .iter()
         .map(|(_c, locs)| {
             let mut count = 0;
             for i in 0..locs.len() - 1 {
@@ -70,6 +71,32 @@ fn part1(antennae: HashMap<char, Vec<(i32, i32)>>, x_len: i32, y_len: i32) -> i6
 }
 
 //=============== PART 2 ===============//
-fn part2() -> i64 {
-    todo!()
+fn part2(antennae: HashMap<char, Vec<(i32, i32)>>, x_len: i32, y_len: i32) -> i64 {
+    let (x_lims, y_lims) = (0..x_len, 0..y_len);
+    let mut found = vec![vec![false; x_len as usize]; y_len as usize];
+    antennae
+        .iter()
+        .map(|(_c, locs)| {
+            let mut count = 0;
+            for i in 0..locs.len() - 1 {
+                let (x1, y1) = locs[i];
+                for (x2, y2) in &locs[i + 1..] {
+                    let (dx, dy) = (x2 - x1, y2 - y1);
+
+                    for (mut x_next, mut y_next, dx, dy) in [(x1, y1, -dx, -dy), (*x2, *y2, dx, dy)]
+                    {
+                        while x_lims.contains(&x_next) && y_lims.contains(&y_next) {
+                            if !found[y_next as usize][x_next as usize] {
+                                found[y_next as usize][x_next as usize] = true;
+                                count += 1;
+                            }
+                            x_next += dx;
+                            y_next += dy;
+                        }
+                    }
+                }
+            }
+            count
+        })
+        .sum()
 }
