@@ -10,3 +10,4 @@ The answers for my puzzle inputs.
 | [Day 4: Ceres Search](https://adventofcode.com/2024/day/4)       |          2545 |           1886 | [C++](src/main/cpp/day04.cpp)    |
 | [Day 5: Print Queue](https://adventofcode.com/2024/day/5)        |          4959 |           4655 | [Java](src/main/java/Day05.java) |
 | [Day 7: Bridge Repair](https://adventofcode.com/2024/day/7)      | 6392012777720 | 61561126043536 | [OCaml](src/main/ml/day07.ml)    |
+| [Day 8: Resonant Collinearity](https://adventofcode.com/2024/day/8) |        364 |           | [Rust](src/main/rs/day08.rs) |
