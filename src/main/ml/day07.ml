@@ -1,42 +1,50 @@
 (*
-  Day 7 - Bridge Repair
-  https://adventofcode.com/2024/day/7
+   Day 7 - Bridge Repair
+   https://adventofcode.com/2024/day/7
    Start: 2024-12-07 19:46
-  Finish: 2024-12-07 23:17
+   Finish: 2024-12-07 23:17
 *)
 open! Core
 
 (*(*(*(*(*(*(*(*(*( PARSE INPUT )*)*)*)*)*)*)*)*)*)
 let parsed_input =
-  let open Str in let open List in
+  let open Str in
+  let open List in
   In_channel.input_lines In_channel.stdin
-  |> map ~f:(fun s -> split (regexp ": \\| ") s |> map ~f:int_of_string)
+  |> map ~f:(fun s -> split (regexp {|: \| |}) s |> map ~f:int_of_string)
   |> map ~f:(fun ws ->
     match ws with
-    | x::xs -> (x, xs)
+    | x :: xs -> x, xs
     | _ -> assert false)
+;;
 
 (*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
 let part1 tests =
   let rec valid tVal nums =
     match nums with
     | [] -> tVal = 0
-    | [x] -> tVal = x
-    | x::y::xs -> valid tVal ((x * y) :: xs) || valid tVal ((x + y)::xs)
+    | [ x ] -> tVal = x
+    | x :: y :: xs -> valid tVal ((x * y) :: xs) || valid tVal ((x + y) :: xs)
   in
   List.fold ~init:0 ~f:(fun acc (v, nums) -> acc + if valid v nums then v else 0) tests
+;;
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
 let part2 tests =
   let rec valid tVal nums =
     match nums with
     | [] -> tVal = 0
-    | [x] -> tVal = x
-    | x::y::xs -> valid tVal ((x * y) :: xs) || valid tVal ((x + y)::xs) ||
-      let conc = int_of_string (string_of_int x ^ string_of_int y) in
-      valid tVal (conc::xs)
+    | [ x ] -> tVal = x
+    | x :: y :: xs ->
+      valid tVal ((x * y) :: xs)
+      || valid tVal ((x + y) :: xs)
+      ||
+      let y_ord_mag = Float.round_down @@ (Float.log10 (float_of_int y) +. 1.) in
+      let conc = (x * int_of_float (10. ** y_ord_mag)) + y in
+      valid tVal (conc :: xs)
   in
   List.fold ~init:0 ~f:(fun acc (v, nums) -> acc + if valid v nums then v else 0) tests
+;;
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
 let () =
@@ -46,10 +54,12 @@ let () =
       | 1 -> part1
       | 2 -> part2
       | _ ->
-          print_endline "Part must be 1 or 2.";
-          exit 1
-    with Invalid_argument _ ->
+        print_endline "Part must be 1 or 2.";
+        exit 1
+    with
+    | Invalid_argument _ ->
       print_endline "Please specify the part to solve.";
       exit 1
   in
   print_endline @@ string_of_int @@ solve parsed_input
+;;
