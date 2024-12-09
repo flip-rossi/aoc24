@@ -3,20 +3,16 @@ import static java.lang.Integer.parseInt;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.random.RandomGeneratorFactory;
 
 /**
  * <h1>Day 9 - Disk Fragmenter</h1>
  * https://adventofcode.com/2024/day/9
  * <p>
  *  Start: 2024-12-09 11:05 <br>
- * Finish: TODO
+ * Finish: 2024-12-09 15:07
  */
 public class Day09 {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -24,20 +20,21 @@ public class Day09 {
     public static void main(String[] args) throws IOException {
         // Parse input
         String line = in.readLine();
-        Deque<int[]> ranges = new ArrayDeque<>(line.length()/2);
+        Deque<Block> blocks = new ArrayDeque<>(line.length()/2);
         int currPos = 0;
+        int file = 0;
         for (int i = 0; i < line.length()/2; i++) {
             int j = i * 2;
 
-            int[] range = new int[2];
-            range[0] = currPos;
+            Block block = new Block(file++);
+            block.start = currPos;
             currPos += line.charAt(j) - 0x30;
-            range[1] = currPos;
+            block.end = currPos;
             currPos += line.charAt(j + 1) - 0x30;
-            ranges.add(range);
+            blocks.add(block);
         }
-        int[] range = new int[]{ currPos, currPos + line.charAt(line.length() - 1) - 0x30 };
-        ranges.add(range);
+        var range = new Block(file, currPos, currPos + line.charAt(line.length() - 1) - 0x30);
+        blocks.add(range);
 
         // Solve
         if (args.length < 1) {
@@ -46,8 +43,8 @@ public class Day09 {
         }
         int part = parseInt(args[0]);
         switch (part) {
-            case 1 -> System.out.println(part1(ranges));
-            case 2 -> System.out.println(part2(ranges));
+            case 1 -> System.out.println(part1(blocks));
+            case 2 -> System.out.println(part2(blocks));
             default -> {
                 System.err.println("Part must be 1 or 2.");
                 System.exit(1);
@@ -55,35 +52,46 @@ public class Day09 {
         }
     }
 
+    static class Block {
+        int file, start, end;
+        public Block(int file) {
+            this.file = file;
+        }
+        public Block(int file, int start, int end) {
+            this.file = file;
+            this.start = start;
+            this.end = end;
+        }
+        int getSize() {
+            return end - start;
+        }
+    }
 
     //=============== PART 1 ===============//
-    static long part1(Deque<int[]> ranges) {
-        int file = 0;
+    static long part1(Deque<Block> blocks) {
         long acc = 0;
 
         for (int pos = 0; true; pos++) {
-            int[] r = ranges.peekFirst();
-            if (r[1] <= pos) {
-                ranges.removeFirst();
-                file++;
-                if (ranges.isEmpty())
+            var b = blocks.peekFirst();
+            if (b.end <= pos) {
+                blocks.removeFirst();
+                if (blocks.isEmpty())
                     break;
-                r = ranges.peekFirst();
+                b = blocks.peekFirst();
             }
 
-            if (r[0] <= pos) {
-                acc += file * pos;
+            if (b.start <= pos) {
+                acc += b.file * pos;
             } else {
-                r = ranges.peekLast();
-                if (r[1] <= r[0]) {
-                    ranges.removeLast();
-                    if (ranges.isEmpty())
+                b = blocks.peekLast();
+                if (b.end <= b.start) {
+                    blocks.removeLast();
+                    if (blocks.isEmpty())
                         break;
-                    r = ranges.peekLast();
+                    b = blocks.peekLast();
                 }
-                var lastFile = file + ranges.size() - 1;
-                acc += lastFile * pos;
-                r[1]--;
+                acc += b.file * pos;
+                b.end--;
             }
         }
 
@@ -91,19 +99,45 @@ public class Day09 {
     }
 
     //=============== PART 2 ===============//
-    static long part2(Deque<int[]> ranges) {
+    static long part2(Deque<Block> blocks) {
         long checksum = 0;
 
         var gaps = new LinkedList<int[]>();
-        for (int i = 0; i < ranges.size() - 1; i++) {
-            var r1 = ranges.removeFirst();
-            ranges.addLast(r1);
-            var r2 = ranges.peekFirst();
+        for (int i = 0; i < blocks.size() - 1; i++) {
+            var b1 = blocks.removeFirst();
+            blocks.addLast(b1);
+            var b2 = blocks.peekFirst();
 
-            int gapStart = r1[0] + r1[1];
-            int[] gap = new int[]{ gapStart, r2[0] - gapStart };
+            int[] gap = new int[]{ b1.end, b2.start };
+            if (gap[0] != gap[1])
+                gaps.add(gap);
         }
+        // The original last element never got removed
+        blocks.addLast(blocks.removeFirst());
 
+        while (!blocks.isEmpty()) {
+            Block b = blocks.removeLast();
+
+            var it = gaps.iterator();
+            while (it.hasNext()) {
+                var gap = it.next();
+                if (gap[0] > b.start)
+                    break;
+
+                if (gap[1] - gap[0] >= b.getSize()) {
+                    b.end = gap[0] + b.getSize();
+                    b.start = gap[0];
+                    gap[0] = b.end;
+                    if (gap[0] == gap[1])
+                        it.remove();
+                    break;
+                }
+            }
+
+            for (int pos = b.start; pos < b.end; pos++) {
+                checksum += pos * b.file;
+            }
+        }
 
         return checksum;
     }
