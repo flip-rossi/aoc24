@@ -7,7 +7,9 @@ import java.io.Reader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.random.RandomGeneratorFactory;
 
 /**
  * <h1>Day 9 - Disk Fragmenter</h1>
@@ -33,11 +35,9 @@ public class Day09 {
             range[1] = currPos;
             currPos += line.charAt(j + 1) - 0x30;
             ranges.add(range);
-            System.err.printf("New range %d, %d\n", range[0], range[1]);
         }
         int[] range = new int[]{ currPos, currPos + line.charAt(line.length() - 1) - 0x30 };
         ranges.add(range);
-        System.err.printf("New range %d, %d\n", range[0], range[1]);
 
         // Solve
         if (args.length < 1) {
@@ -47,7 +47,7 @@ public class Day09 {
         int part = parseInt(args[0]);
         switch (part) {
             case 1 -> System.out.println(part1(ranges));
-            case 2 -> System.out.println(part2());
+            case 2 -> System.out.println(part2(ranges));
             default -> {
                 System.err.println("Part must be 1 or 2.");
                 System.exit(1);
@@ -55,54 +55,57 @@ public class Day09 {
         }
     }
 
+
     //=============== PART 1 ===============//
     static long part1(Deque<int[]> ranges) {
-        int pos = 0;
-        long acc = 0;
         int file = 0;
+        long acc = 0;
 
-        var nextRange = ranges.remove();
-        try {
-            while (!ranges.isEmpty()) {
-                while (pos < nextRange[1]) {
-                    System.err.printf("Seq file %d pos %d\n", file, pos);
-                    System.err.printf("Range %d, %d\n", nextRange[0], nextRange[1]);
-                    System.err.printf("inc %d\n", file * pos);
-                    acc += file * pos++;
-                }
+        for (int pos = 0; true; pos++) {
+            int[] r = ranges.peekFirst();
+            if (r[1] <= pos) {
+                ranges.removeFirst();
                 file++;
-
-                nextRange = ranges.removeFirst();
-
-                var lastRange = ranges.peekLast();
-                var lastFile = file + ranges.size();
-                while (pos < nextRange[0]) {
-                    if (lastRange[1] <= lastRange[0]) {
-                        ranges.removeLast();
-                        lastRange = ranges.peekLast();
-                        lastFile = file + ranges.size();
-                    }
-                    System.err.printf("lastfile %d pos %d\n", lastFile, pos);
-                    System.err.printf("Range %d, %d\n", lastRange[0], lastRange[1]);
-                    System.err.printf("inc %d\n", file * pos);
-
-                    acc += lastFile * pos++;
-                    lastRange[1]--;
-                    System.err.printf("New range %d %d\n", lastRange[0], lastRange[1]);
-                }
-
+                if (ranges.isEmpty())
+                    break;
+                r = ranges.peekFirst();
             }
-        } catch (NullPointerException e) {
-            System.err.println(e);
+
+            if (r[0] <= pos) {
+                acc += file * pos;
+            } else {
+                r = ranges.peekLast();
+                if (r[1] <= r[0]) {
+                    ranges.removeLast();
+                    if (ranges.isEmpty())
+                        break;
+                    r = ranges.peekLast();
+                }
+                var lastFile = file + ranges.size() - 1;
+                acc += lastFile * pos;
+                r[1]--;
+            }
         }
 
         return acc;
     }
 
     //=============== PART 2 ===============//
-    static long part2() {
-        // TODO
-        throw new UnsupportedOperationException("TODO");
+    static long part2(Deque<int[]> ranges) {
+        long checksum = 0;
+
+        var gaps = new LinkedList<int[]>();
+        for (int i = 0; i < ranges.size() - 1; i++) {
+            var r1 = ranges.removeFirst();
+            ranges.addLast(r1);
+            var r2 = ranges.peekFirst();
+
+            int gapStart = r1[0] + r1[1];
+            int[] gap = new int[]{ gapStart, r2[0] - gapStart };
+        }
+
+
+        return checksum;
     }
 
 }
