@@ -13,3 +13,4 @@ The answers for my puzzle inputs.
 | [Day 7: Bridge Repair](https://adventofcode.com/2024/day/7)         | 6392012777720 | 61561126043536 | [OCaml](src/main/ml/day07.ml)    |
 | [Day 8: Resonant Collinearity](https://adventofcode.com/2024/day/8) |           364 |           1231 | [Rust](src/main/rs/day08.rs)     |
 | [Day 9: Disk Fragmenter](https://adventofcode.com/2024/day/9)       | 6461289671426 |  6488291456470 | [Java](src/main/java/Day09.java) |
+| [Day 10: Hoof It](https://adventofcode.com/2024/day/10)             |           459 |           1034 | [C++](src/main/cpp/day10.cpp)    |

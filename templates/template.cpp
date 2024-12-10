@@ -25,11 +25,12 @@ int64_t part1() {
     return -1; // TODO
 }
 
-//=============== PART 1 ===============//
+//=============== PART 2 ===============//
 int64_t part2() {
     return -1; // TODO
 }
 
+//=============== SOLVE ================//
 int main(int argc, char *argv[]) {
     // Parse input
     for (string line; getline(cin, line); ) {
