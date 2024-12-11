@@ -42,20 +42,6 @@ let rec part1 pebbles =
 ;;
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-(* This is awesome: https://ocaml.org/docs/memoization *)
-let memo_rec f =
-  let open Stdlib in
-  let h = Hashtbl.create 2024 in
-  let rec g x =
-    try Hashtbl.find h x with
-    | Not_found ->
-      let y = f g x in
-      Hashtbl.add h x y;
-      y
-  in
-  g
-;;
-
 let blink_memo blinks stone =
   let blink self blinks stone =
     let nxt_blink = blinks - 1 in
@@ -74,7 +60,7 @@ let blink_memo blinks stone =
       else self nxt_blink (stone * 2024))
   in
   let uncurried self (x, y) = blink (Tuple2.curry self) x y in
-  memo_rec uncurried (blinks, stone)
+  Utils.Memo.memo_rec uncurried (blinks, stone)
 ;;
 
 let rec part2 pebbles =
