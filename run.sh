@@ -58,7 +58,6 @@ fi
 if [[ -z "$input" ]]; then
     input="$INPUT_DIR/input$day.txt"
 fi
-print_msg "Reading from $input"
 
 if ! $(is_number $1); then
     bad_args
@@ -78,6 +77,7 @@ if [[ ! -v lang ]]; then
 fi
 
 run_solution() {
+    print_msg "time $@ $part < $input"
     ( time "$@" "$part" < "$input" ) | tee /dev/tty | tail -1 | wl-copy -n
 }
 
