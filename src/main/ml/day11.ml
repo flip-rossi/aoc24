@@ -2,7 +2,7 @@
    Day 11 - Plutonian Pebbles
    https://adventofcode.com/2024/day/11
    Start: 2024-12-11 09:57
-   Finish: TODO
+   Finish: 2024-12-11 13:43
 *)
 open! Core
 
@@ -42,15 +42,50 @@ let rec part1 pebbles =
 ;;
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
+(* This is awesome: https://ocaml.org/docs/memoization *)
+let memo_rec f =
+  let open Stdlib in
+  let h = Hashtbl.create 2024 in
+  let rec g x =
+    try Hashtbl.find h x with
+    | Not_found ->
+      let y = f g x in
+      Hashtbl.add h x y;
+      y
+  in
+  g
+;;
+
+let blink_memo blinks stone =
+  let blink self blinks stone =
+    let nxt_blink = blinks - 1 in
+    if blinks = 0
+    then 1
+    else if stone = 0
+    then self nxt_blink 1
+    else (
+      let digits = 1 + int_log10 stone in
+      if digits % 2 = 0
+      then (
+        let exp = int_exp10 (digits / 2) in
+        let left = stone / exp in
+        let right = stone % exp in
+        self nxt_blink left + self nxt_blink right)
+      else self nxt_blink (stone * 2024))
+  in
+  let uncurried self (x, y) = blink (Tuple2.curry self) x y in
+  memo_rec uncurried (blinks, stone)
+;;
+
 let rec part2 pebbles =
-  (* TODO takes forever, as expected :)  *)
   match pebbles with
   | [] -> 0
-  | x :: xs -> blink 75 x + part2 xs
+  | x :: xs -> blink_memo 75 x + part2 xs
 ;;
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
 let () =
+  let open Core in
   let solve =
     try
       match int_of_string (Sys.get_argv ()).(1) with
