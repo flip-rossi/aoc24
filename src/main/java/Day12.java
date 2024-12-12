@@ -15,7 +15,7 @@ import aoc.UnionFind;
  * https://adventofcode.com/2024/day/12
  * <p>
  *  Start: 2024-12-12 10:09 <br>
- * Finish: TODO
+ * Finish: 2024-12-12 18:35
  */
 public class Day12 {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -34,7 +34,7 @@ public class Day12 {
         int part = parseInt(args[0]);
         switch (part) {
             case 1 -> System.out.println(part1(plants));
-            case 2 -> System.out.println(part2());
+            case 2 -> System.out.println(part2(plants));
             default -> {
                 System.err.println("Part must be 1 or 2.");
                 System.exit(1);
@@ -42,7 +42,6 @@ public class Day12 {
         }
     }
 
-    //=============== PART 1 ===============//
     static class ComponentInfo {
         int area, minX, minY, maxX, maxY;
         public ComponentInfo(int area, int minX, int minY, int maxX, int maxY) {
@@ -95,14 +94,13 @@ public class Day12 {
                 if (i < info.minY) info.minY = i;
                 if (j > info.maxX) info.maxX = j;
                 if (i > info.maxY) info.maxY = i;
-
-                System.err.println("Plant " + plants.get(i).get(j) + " tag " + tag);
             }
         }
 
         return Pair.of(tagsPadded, infos);
     }
 
+    //=============== PART 1 ===============//
     static int countPerimeter(int[][] tagsPadded, int component, ComponentInfo info) {
         int perimeter = 0;
 
@@ -135,19 +133,53 @@ public class Day12 {
             var info = infos[tag];
             if (info == null)
                 continue;
-            int perim = countPerimeter(tagsPadded, tag, info);
-            acc += info.area * perim;
-            System.err.printf("%d: area (%d) * perim (%d) = %d\n", tag, info.area, perim, info.area * perim);
-            System.err.printf("min (%d, %d) max (%d, %d)\n", info.minX, info.minY, info.maxX, info.maxY);
+            acc += info.area * countPerimeter(tagsPadded, tag, info);
         }
 
         return acc;
     }
 
     //=============== PART 2 ===============//
-    static long part2() {
-        // TODO
-        throw new UnsupportedOperationException("TODO");
+    static final int[][] DIRS = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+
+    static int countSides(int[][] tagsPadded, int component, ComponentInfo info) {
+        int sides = 0;
+
+        var t = tagsPadded;
+        for (int i = info.minY + 1; i <= info.maxY + 1; i++) {
+            for (int j = info.minX + 1; j <= info.maxX + 1; j++) {
+                if (t[i][j] == component) {
+                    for (var dir : DIRS) {
+                        int di = dir[0], dj = dir[1];
+                        if ((t[i + di][j + dj] != component)
+                                // not same dir fence top
+                                && (t[i - 1][j] != component || t[i - 1 + di][j + dj] == component)
+                                // not same dir fence left
+                                && (t[i][j - 1] != component || t[i + di][j - 1 + dj] == component))
+                            sides++;
+                    }
+                }
+            }
+        }
+
+        return sides;
+    }
+
+    static long part2(List<List<Character>> plants) {
+        var compRes = connectedComponents(plants);
+        int[][] tagsPadded = compRes.getLeft();
+        var infos = compRes.getRight();
+
+        long acc = 0;
+        for (int tag = 1; tag < infos.length; tag++) {
+            var info = infos[tag];
+            if (info == null)
+                continue;
+            int sides = countSides(tagsPadded, tag, info);
+            acc += info.area * sides;
+        }
+
+        return acc;
     }
 
 }

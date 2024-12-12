@@ -15,4 +15,4 @@ The answers for my puzzle inputs.
 | [Day 9: Disk Fragmenter](https://adventofcode.com/2024/day/9)       | 6461289671426 |   6488291456470 | [Java](src/main/java/Day09.java) |
 | [Day 10: Hoof It](https://adventofcode.com/2024/day/10)             |           459 |            1034 | [C++](src/main/cpp/day10.cpp)    |
 | [Day 11: Plutonian Pebbles](https://adventofcode.com/2024/day/11)   |        217443 | 257246536026785 | [OCaml](src/main/ml/day11.ml) |
-| [Day 12: Garden Groups](https://adventofcode.com/2024/day/12)       |       1477924 |                 | [Java](src/main/java/Day12.java) |
+| [Day 12: Garden Groups](https://adventofcode.com/2024/day/12)       |       1477924 |          841934 | [Java](src/main/java/Day12.java) |
