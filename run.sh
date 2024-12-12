@@ -6,6 +6,7 @@ INPUT_DIR=./inputs
 RUST_TARGET=./target/rs/debug
 OCAML_TARGET=./_build/default/src/main/ml
 JAVA_CLASSPATH=./target/java/classes
+JAVA_CLASSPATH_FILE=./target/java/mvn-classpath.txt
 CPP_TARGET=./target/cpp
 
 bad_args() {
@@ -83,8 +84,8 @@ run_solution() {
 
 case "$lang" in
     java|j)
-        mvn compile &&
-            run_solution java -cp "$JAVA_CLASSPATH" "Day$day"
+        mvn compile -DincludeScope=compile -Dmdep.outputFile=$JAVA_CLASSPATH_FILE dependency:build-classpath &&
+            run_solution java -cp "$JAVA_CLASSPATH:`cat $JAVA_CLASSPATH_FILE`" "Day$day"
         ;;
     rs|r|rust)
         cargo build --bin "day$day" &&
