@@ -16,4 +16,4 @@ The answers for my puzzle inputs.
 | [Day 10: Hoof It](https://adventofcode.com/2024/day/10)             |           459 |            1034 | [C++](src/main/cpp/day10.cpp)    |
 | [Day 11: Plutonian Pebbles](https://adventofcode.com/2024/day/11)   |        217443 | 257246536026785 | [OCaml](src/main/ml/day11.ml)    |
 | [Day 12: Garden Groups](https://adventofcode.com/2024/day/12)       |       1477924 |          841934 | [Java](src/main/java/Day12.java) |
-| [Day 13: Claw Contraption](https://adventofcode.com/2024/day/13)    |         26299 |                 | [Java](src/main/java/Day13.java) |
+| [Day 13: Claw Contraption](https://adventofcode.com/2024/day/13)    |         26299 | 107824497933339 | [Java](src/main/java/Day13.java) |
