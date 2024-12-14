@@ -3,8 +3,7 @@ SRC_DIRS := ./src
 
 # C++ vars
 CXX := g++
-#same flags as MUIP '23, but with C++ 23
-CXX_FLAGS := -std=c++23 -Wall -lm -O2
+CXX_FLAGS := -std=c++23 -Wall -lm
 
 CXX_SRC_DIR := ./src/main/cpp
 CXX_OUT_DIR := ./target/cpp

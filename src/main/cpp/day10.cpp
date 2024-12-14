@@ -27,7 +27,7 @@ const int DIRS[][2] { { 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 } };
 const int GOAL_LVL = 9;
 
 //=============== PART 1 ===============//
-int dfs_score(vector<vector<int>> map, int x0, int y0) {
+int dfs_score(const vector<vector<int>> &map, int x0, int y0) {
     int h = map.size(), w = map[0].size();
 
     int score = 0;
@@ -37,10 +37,10 @@ int dfs_score(vector<vector<int>> map, int x0, int y0) {
     vector<std::pair<int, int>> stack;
     stack.push_back({x0, y0});
 
-    for (std::pair<int, int> pos = stack.back(); stack.size() > 0; pos = stack.back()) {
+    for (std::pair<int, int> &pos = stack.back(); stack.size() > 0; pos = stack.back()) {
+        int x = pos.first, y = pos.second;
         stack.pop_back();
 
-        int x = pos.first, y = pos.second;
         int lvl = map[y][x];
         visited[y][x] = true;
 
@@ -63,7 +63,7 @@ int dfs_score(vector<vector<int>> map, int x0, int y0) {
     return score;
 }
 
-int64_t part1(vector<vector<int>> map) {
+int64_t part1(vector<vector<int>> &map) {
     int h = map.size(), w = map[0].size();
 
     int scores = 0;
@@ -79,7 +79,7 @@ int64_t part1(vector<vector<int>> map) {
 }
 
 //=============== PART 2 ===============//
-int dfs_rating(vector<vector<int>> map, int x0, int y0) {
+int dfs_rating(const vector<vector<int>>& map, int x0, int y0) {
     int h = map.size(), w = map[0].size();
 
     int score = 0;
@@ -87,10 +87,10 @@ int dfs_rating(vector<vector<int>> map, int x0, int y0) {
     vector<std::pair<int, int>> stack;
     stack.push_back({x0, y0});
 
-    for (std::pair<int, int> pos = stack.back(); stack.size() > 0; pos = stack.back()) {
+    for (std::pair<int, int> &pos = stack.back(); stack.size() > 0; pos = stack.back()) {
+        int x = pos.first, y = pos.second;
         stack.pop_back();
 
-        int x = pos.first, y = pos.second;
         int lvl = map[y][x];
 
         if (lvl == GOAL_LVL) {
@@ -112,7 +112,7 @@ int dfs_rating(vector<vector<int>> map, int x0, int y0) {
     return score;
 }
 
-int64_t part2(vector<vector<int>> map) {
+int64_t part2(vector<vector<int>> &map) {
     int h = map.size(), w = map[0].size();
 
     int ratings = 0;
