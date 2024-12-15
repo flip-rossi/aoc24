@@ -30,7 +30,7 @@ done
 shift $((OPTIND - 1))
 
 print_msg() {
-    echo "=====> $1" >&2
+    echo -e "\033[95m=====> $@\033[0m" >&2
 }
 
 is_number() {
