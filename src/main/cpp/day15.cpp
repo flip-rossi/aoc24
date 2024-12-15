@@ -4,7 +4,7 @@
  * https://adventofcode.com/2024/day/15
  *
  *  Start: 2024-12-15 11:51
- * Finish: TODO
+ * Finish: 2024-12-15 19:05
  */
 
 #include <cassert>
@@ -56,7 +56,7 @@ int64_t part1(vector<vector<Space>>& map, vector<Dir>& moves, int robotX, int ro
             robotX += dx;
             robotY += dy;
         }
-        /*
+#ifdef DEBUG
         cout << dx << ", " << dy << endl;
         for (int y = 0; y < map.size(); y++) {
             for (int x = 0; x < map[0].size(); x++) {
@@ -71,7 +71,7 @@ int64_t part1(vector<vector<Space>>& map, vector<Dir>& moves, int robotX, int ro
             }
             cout << endl;
         }
-        */
+#endif // DEBUG
     }
 
     // Get result
@@ -81,19 +81,7 @@ int64_t part1(vector<vector<Space>>& map, vector<Dir>& moves, int robotX, int ro
         for (int x = 0; x < m; x++) {
             if (map[y][x] == BOX)
                 acc += x + y * 100;
-
-            /*
-            if (x == robotX && y == robotY)
-                cout << '@';
-            else if (map[y][x] == WALL)
-                cout << '#';
-            else if (map[y][x] == BOX)
-                cout << 'O';
-            else if (map[y][x] == EMPTY)
-                cout << '.';
-            */
         }
-        //cout << endl;
     }
     return acc;
 }
@@ -124,16 +112,15 @@ bool can_move2(vector<vector<Space>>& map, int x, int y, int dx, int dy, bool ch
     int x2 = x + dx, y2 = y + dy;
     Space space = map[y][x];
     if (space == WALL
-            || x2 < 0 || (int)map[0].size() <= x2 || y2 < 0 || (int)map.size() <= y2
-            || map[y2][x2] == WALL) {
+            || x2 < 0 || (int)map[0].size() <= x2 || y2 < 0 || (int)map.size() <= y2) {
         return false;
-    } else if (map[y2][x2] == EMPTY) {
+    } else if (space == EMPTY) {
         return true;
     } else if (dy == 0 || chained) {
         return can_move2(map, x2, y2, dx, dy, false);
-    } else if (map[y2][x2] == BOX_L) {
+    } else if (space == BOX_L) {
         return can_move2(map, x2, y2, dx, dy, false) && can_move2(map, x + 1, y, dx, dy, true);
-    } else if (map[y2][x2] == BOX_R) {
+    } else if (space == BOX_R) {
         return can_move2(map, x2, y2, dx, dy, false) && can_move2(map, x - 1, y, dx, dy, true);
     } else {
         cout << "SHOULDN'T HAPPEN" << endl;
@@ -166,13 +153,14 @@ void move2(vector<vector<Space>>& map, int x, int y, int dx, int dy, bool chaine
 int64_t part2(vector<vector<Space>>& map, vector<Dir>& moves, int robotX, int robotY) {
     // Move around
     for (auto& [dx, dy] : moves) {
-        if (can_move2(map, robotX, robotY, dx, dy, false)) {
+        if (can_move2(map, robotX + dx, robotY + dy, dx, dy, false)) {
             move2(map, robotX + dx, robotY + dy, dx, dy, false);
             robotX += dx;
             robotY += dy;
         }
 
-        cout << dx << ", " << dy << endl;
+#ifdef DEBUG
+        cout << "dir: " << dx << ", " << dy << endl;
         for (int y = 0; y < (int)map.size(); y++) {
             for (int x = 0; x < (int)map[0].size(); x++) {
                 if (x == robotX && y == robotY)
@@ -188,6 +176,7 @@ int64_t part2(vector<vector<Space>>& map, vector<Dir>& moves, int robotX, int ro
             }
             cout << endl;
         }
+#endif // DEBUG
     }
 
     // Get result
@@ -197,21 +186,8 @@ int64_t part2(vector<vector<Space>>& map, vector<Dir>& moves, int robotX, int ro
         for (int x = 0; x < m; x++) {
             if (map[y][x] == BOX_L)
                 acc += x + y * 100;
-
-            /*
-            if (x == robotX && y == robotY)
-                cout << '@';
-            else if (map[y][x] == WALL)
-                cout << '#';
-            else if (map[y][x] == BOX)
-                cout << 'O';
-            else if (map[y][x] == EMPTY)
-                cout << '.';
-            */
         }
-        //cout << endl;
     }
-    // TODO 1570684 too high
     return acc;
 }
 
