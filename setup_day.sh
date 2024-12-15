@@ -128,5 +128,5 @@ xdg_open_background() {
 }
 
 nohup xdg-open "$url" &> /dev/null & disown
-nohup alacritty -e nvim "$src_file" "./inputs/example.txt" "./inputs/input${day_padded}.txt" &> /dev/null & disown
+nohup alacritty -e nvim "$src_file" "./inputs/example.txt" "./inputs/input${day_padded}.txt" "./Answers.md" &> /dev/null & disown
 

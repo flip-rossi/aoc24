@@ -3,7 +3,7 @@ SRC_DIRS := ./src
 
 # C++ vars
 CXX := g++
-CXX_FLAGS := -std=c++23 -Wall -lm
+CXX_FLAGS := -std=c++23 -Wall -lm -g
 
 CXX_SRC_DIR := ./src/main/cpp
 CXX_OUT_DIR := ./target/cpp
