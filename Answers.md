@@ -19,3 +19,4 @@ The answers for my puzzle inputs.
 | [Day 13: Claw Contraption](https://adventofcode.com/2024/day/13)    |         26299 | 107824497933339 | [Java](src/main/java/Day13.java) |
 | [Day 14: Restroom Redoubt](https://adventofcode.com/2024/day/14)    |     230686500 |            7672 | [Java](src/main/java/Day14.java) |
 | [Day 15: Warehouse Woes](https://adventofcode.com/2024/day/15)      |       1552879 |         1561175 | [C++](src/main/cpp/day15.cpp)    |
+| [Day 16: Reindeer Maze](https://adventofcode.com/2024/day/16)       |        130536 |                 | [Java](src/main/java/Day16.java) |
