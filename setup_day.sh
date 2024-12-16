@@ -100,7 +100,7 @@ fi
 
 cp "$template_file" $src_file
 sed -E "$template_substs" "$template_file" > "$src_file"
-echo "| [Day $day: $title]($url) |           |           | [$language_pretty]($src_file) |" >> Answers.md
+echo "| [Day $day: $title]($url) |               |               | [$language_pretty]($src_file) |" >> Answers.md
 
 # Do extra stuff, depending on language
 case "$lang" in

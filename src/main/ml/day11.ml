@@ -42,7 +42,7 @@ let rec part1 pebbles =
 ;;
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-let blink_memo blinks stone =
+let blink_memo hashtbl blinks stone =
   let blink self blinks stone =
     let nxt_blink = blinks - 1 in
     if blinks = 0
@@ -60,13 +60,17 @@ let blink_memo blinks stone =
       else self nxt_blink (stone * 2024))
   in
   let uncurried self (x, y) = blink (Tuple2.curry self) x y in
-  Utils.Memo.memo_rec uncurried (blinks, stone)
+  Utils.Memo.memo_rec ~hashtbl:hashtbl uncurried (blinks, stone)
 ;;
 
-let rec part2 pebbles =
-  match pebbles with
-  | [] -> 0
-  | x :: xs -> blink_memo 75 x + part2 xs
+let part2 pebbles =
+  let h = Stdlib.Hashtbl.create 131204 in
+  let rec count_pebbles pebbles =
+    match pebbles with
+    | [] -> 0
+    | x :: xs -> blink_memo h 75 x + count_pebbles xs
+  in
+  count_pebbles pebbles
 ;;
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)

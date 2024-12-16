@@ -1,22 +1,20 @@
 (* This is awesome: https://ocaml.org/docs/memoization *)
 
-let memo ?(size = 42) f =
-  let h = Hashtbl.create size in
+let memo ?(hashtbl = Hashtbl.create 42) f =
   fun x ->
-    try Hashtbl.find h x with
+    try Hashtbl.find hashtbl x with
     | Not_found ->
       let y = f x in
-      Hashtbl.add h x y;
+      Hashtbl.add hashtbl x y;
       y
 ;;
 
-let memo_rec ?(size = 42) f =
-  let h = Hashtbl.create size in
+let memo_rec ?(hashtbl = Hashtbl.create 42) f =
   let rec g x =
-    try Hashtbl.find h x with
+    try Hashtbl.find hashtbl x with
     | Not_found ->
       let y = f g x in
-      Hashtbl.add h x y;
+      Hashtbl.add hashtbl x y;
       y
   in
   g
