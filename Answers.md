@@ -20,4 +20,5 @@ The answers for my puzzle inputs.
 | [Day 14: Restroom Redoubt](https://adventofcode.com/2024/day/14)       |         230686500 |            7672 | [Java](src/main/java/Day14.java) |
 | [Day 15: Warehouse Woes](https://adventofcode.com/2024/day/15)         |           1552879 |         1561175 | [C++](src/main/cpp/day15.cpp)    |
 | [Day 16: Reindeer Maze](https://adventofcode.com/2024/day/16)          |            130536 |            1024 | [Java](src/main/java/Day16.java) |
-| [Day 17: Chronospatial Computer](https://adventofcode.com/2024/day/17) | 4,1,7,6,4,1,0,2,7 |                 | [Java](src/main/java/Day17.java) |
+| [Day 17: Chronospatial Computer](https://adventofcode.com/2024/day/17) | 4,1,7,6,4,1,0,2,7 |    /* TODO */   | [Java](src/main/java/Day17.java) |
+| [Day 18: RAM Run](https://adventofcode.com/2024/day/18)                |               232 |           44,64 | [Java](src/main/java/Day18.java) |
