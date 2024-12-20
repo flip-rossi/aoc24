@@ -115,6 +115,7 @@ path = \"$src_file\"" \
     #cpp) nothing ;;
     ml)
         sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/ml/dune"
+        dune build
         ;;
 esac
 

@@ -1,6 +1,6 @@
 (executables
- (names day01 day03 day07 day11)
- (public_names day01 day03 day07 day11)
+ (names day01 day03 day07 day11 day19)
+ (public_names day01 day03 day07 day11 day19)
  (libraries utils core str day03_interp))
 
 (env
