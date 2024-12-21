@@ -63,10 +63,9 @@ let rec part1 patterns designs =
 *)
 (* TODO wrong *)
 Utils.Word_list_to_automata.(
-print_endline @@ string_of_automata @@ words_to_automata @@ exploded_example_words)
-;;
-let part2 patterns designs = 0
-  (*
+  print_endline @@ string_of_automata @@ words_to_automata @@ exploded_example_words)
+
+let part2 patterns designs =
   let open Utils.Word_list_to_automata in
   let patterns, designs =
     Utils.Str_utils.(List.map patterns ~f:explode, List.map designs ~f:explode)
@@ -75,16 +74,19 @@ let part2 patterns designs = 0
   print_endline (string_of_automata automata);
   let rec possibilities state design =
     let to_states = Map.find_exn automata.transitions state in
+    (match Map.find to_states Epsilon with
+     | None -> 0
+     | Some next_state -> possibilities next_state design)
+    +
     match design with
     | [] -> if Set.mem automata.accept_states state then 1 else 0
-    | sym :: subdesign ->
-      match Map.find to_states sym with
-      | None -> 0
-      | Some next_state -> possibilities next_state subdesign
+    | c :: cs ->
+      (match Map.find to_states (Sym c) with
+       | None -> 0
+       | Some next_state -> possibilities next_state cs)
   in
   List.sum (module Int) designs ~f:(possibilities automata.init_state)
 ;;
-*)
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
 let () =
