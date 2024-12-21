@@ -62,7 +62,11 @@ let rec part1 patterns designs =
    ;;
 *)
 (* TODO wrong *)
-let part2 patterns designs =
+Utils.Word_list_to_automata.(
+print_endline @@ string_of_automata @@ words_to_automata @@ exploded_example_words)
+;;
+let part2 patterns designs = 0
+  (*
   let open Utils.Word_list_to_automata in
   let patterns, designs =
     Utils.Str_utils.(List.map patterns ~f:explode, List.map designs ~f:explode)
@@ -80,6 +84,7 @@ let part2 patterns designs =
   in
   List.sum (module Int) designs ~f:(possibilities automata.init_state)
 ;;
+*)
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
 let () =
