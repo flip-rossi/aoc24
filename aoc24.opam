@@ -6,6 +6,7 @@ depends: [
   "core"
   "menhir"
   "ocamllex"
+  "re2"
   "odoc" {with-doc}
 ]
 build: [

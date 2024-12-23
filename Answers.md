@@ -23,3 +23,4 @@ The answers for my puzzle inputs.
 | [Day 17: Chronospatial Computer](https://adventofcode.com/2024/day/17) | 4,1,7,6,4,1,0,2,7 |    /* TODO */   | [Java](src/main/java/Day17.java) |
 | [Day 18: RAM Run](https://adventofcode.com/2024/day/18)                |               232 |           44,64 | [Java](src/main/java/Day18.java) |
 | [Day 19: Linen Layout](https://adventofcode.com/2024/day/19)           |               247 | 692596560138745 | [OCaml](src/main/ml/day19.ml)    |
+| [Day 20: Race Condition](https://adventofcode.com/2024/day/20)         |              1384 |                 | [OCaml](src/main/ml/day20.ml)    |
