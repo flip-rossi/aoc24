@@ -7,6 +7,7 @@ depends: [
   "menhir"
   "ocamllex"
   "re2"
+  "ppx_hash"
   "odoc" {with-doc}
 ]
 build: [

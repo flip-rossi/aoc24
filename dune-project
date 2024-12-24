@@ -6,7 +6,7 @@
 
 (package
  (name aoc24)
- (depends ocaml dune core menhir ocamllex re2))
+ (depends ocaml dune core menhir ocamllex re2 ppx_hash))
 
 (using menhir 3.0)
 

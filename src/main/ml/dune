@@ -2,7 +2,7 @@
  (names day01 day03 day07 day11 day19 day20)
  (public_names day01 day03 day07 day11 day19 day20)
  (libraries utils core str re2 day03_interp)
- (preprocess (pps ppx_sexp_conv ppx_compare)))
+ (preprocess (pps ppx_sexp_conv ppx_compare ppx_hash)))
 
 (env
  (dev
