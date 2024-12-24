@@ -15,6 +15,10 @@ type pos =
 module Position = struct
   module T = struct
     type t = pos [@@deriving sexp, compare, hash]
+
+    let to_string pos =
+      "{x=" ^ string_of_int pos.x ^ "; y=" ^ string_of_int pos.y ^ "}"
+    ;;
   end
 
   include T
@@ -31,15 +35,18 @@ type space =
 (*(*(*(*(*(*(*(*(*( PARSE INPUT )*)*)*)*)*)*)*)*)*)
 let parsed_input =
   let start = ref None in
+  let finish = ref None in
   let map =
     In_channel.input_lines In_channel.stdin
     |> List.mapi ~f:(fun y line ->
-      Utils.Str_utils.explode line
+      String.to_list line
       |> List.mapi ~f:(fun x c ->
         match c with
         | '#' -> Wall
         | '.' -> Free
-        | 'E' -> End
+        | 'E' ->
+          finish := Some { x; y };
+          End
         | 'S' ->
           start := Some { x; y };
           Free
@@ -47,12 +54,12 @@ let parsed_input =
       |> List.to_array)
     |> List.to_array
   in
-  Option.value_exn ~message:"Bad input. No start position." !start, map
+  Option.value_exn !start, map, Option.value_exn !finish
 ;;
 
 (*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
 (* Takes quite a while (around 43s), but it works. (Part 2 will hurt) *)
-let part1 start map =
+let part1 start map _ =
   let open Utils in
   let n, m = Array.length map, Array.length map.(0) in
   let rec bfs_explore count_fun found q node lvl cheat =
@@ -93,83 +100,51 @@ let part1 start map =
 ;;
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-type cheat_state =
-  | Honest
-  | Cheating of pos * int
-  | Cheated
+let neighbors n m from_pos =
+  List.filter_map dirs ~f:(fun { x = dx; y = dy } ->
+    let x, y = from_pos.x + dx, from_pos.y + dy in
+    if 0 <= y && y < n && 0 <= x && x < m then Some { x; y } else None)
+;;
 
-let cheat_len = 20
+let mat_get mat pos = mat.(pos.y).(pos.x)
+let mat_set mat pos value = mat.(pos.y).(pos.x) <- value
 
-module Pos_pair = struct
-  module T = struct
-    type t = Position.t * Position.t [@@deriving sexp, compare, hash]
-  end
-
-  include T
-  include Comparable.Make (T)
-end
-
-let part2 start map =
-  let open Utils in
+(* 180473 too low; 5660267 too high; 2104420, 2118665, 2506901, 2583534 wrong *)
+let part2 _start map finish =
+  let max_cheat = 20 in
+  let min_save = 100 in
   let n, m = Array.length map, Array.length map.(0) in
-  let rec bfs_count
-    count_fun
-    used_cheats
-    found
-    (q : (pos * int * cheat_state) Func_queue.t)
-    =
-    let self = bfs_count count_fun used_cheats in
-    let explore found q node lvl cheat =
-      let found = Set.add found node in
-      let q =
-        List.filter_map dirs ~f:(fun { x = dx; y = dy } ->
-          let x, y = node.x + dx, node.y + dy in
-          if 0 <= y && y < n && 0 <= x && x < m && not (Set.mem found { x; y })
-          then Some ({ x; y }, lvl + 1, cheat)
-          else None)
-        |> Func_queue.append q
-      in
-      self found q
-    in
-    match Func_queue.dequeue q with
-    | _, None -> failwith "No path found."
-    | q, Some (pos, lvl, cheat) ->
-      (match map.(pos.y).(pos.x), cheat with
-       | End, Cheating (p0, _) ->
-         if not (Hash_set.mem used_cheats (p0, pos))
-         then (
-           print_endline @@ "Found exit at lvl " ^ string_of_int lvl;
-           Hash_set.add used_cheats (p0, pos);
-           count_fun lvl)
-         else 0
-       | End, _ ->
-         print_endline @@ "Found exit at lvl " ^ string_of_int lvl;
-         count_fun lvl
-       | Wall, Honest ->
-         self found q + explore found q pos lvl (Cheating (pos, cheat_len - 1))
-       | Wall, Cheating (_, 0) -> (* died in wall *) self found q
-       | Wall, Cheated -> (* died in or hit wall *) self found q
-       | _, Cheating (p0, remaining) ->
-         (* cheat ended *)
-         (if not (Hash_set.mem used_cheats (p0, pos))
-          then (
-            Hash_set.add used_cheats (p0, pos);
-            explore found q pos lvl Cheated)
-          else 0)
-         +
-         if remaining > 0
-         then explore found q pos lvl (Cheating (pos, remaining - 1))
-         else 0
-       | Free, cheat -> explore found q pos lvl cheat)
+  let neighbors = neighbors n m in
+  let dists = Array.make_matrix ~dimx:n ~dimy:m None in
+  let rec get_dists_to_end pos dist =
+    match mat_get map pos, mat_get dists pos with
+    | Wall, _ | _, Some _ -> ()
+    | _ ->
+      mat_set dists pos (Some dist);
+      List.iter (neighbors pos) ~f:(fun next -> get_dists_to_end next (dist + 1))
   in
-  let queue0 = Func_queue.singleton (start, 0, Cheated) in
-  let found0 = Set.singleton (module Position) start in
-  let used_cheats = Hash_set.create (module Pos_pair) ?size:None ~growth_allowed:true in
-  let count_lvl lvl = lvl in
-  let cheatless_len = bfs_count count_lvl used_cheats found0 queue0 in
-  let count_100_diff lvl = if lvl <= cheatless_len - 100 then 1 else 0 in
-  let queue0 = Func_queue.singleton (start, 0, Honest) in
-  bfs_count count_100_diff used_cheats found0 queue0
+  get_dists_to_end finish 0;
+  let dcheat = List.range ~start:`inclusive ~stop:`inclusive (-max_cheat) max_cheat in
+  Array.foldi dists ~init:0 ~f:(fun y acc row ->
+    let dys = List.filter dcheat ~f:(fun dy -> 0 <= y + dy && y + dy < n) in
+    acc
+    + Array.foldi row ~init:0 ~f:(fun x acc cell ->
+      acc
+      +
+      match cell with
+      | None -> 0
+      | Some dist0 ->
+        let dxs = List.filter dcheat ~f:(fun dx -> 0 <= x + dx && x + dx < m) in
+        List.count (List.cartesian_product dxs dys) ~f:(fun (dx, dy) ->
+          if dx + dy > max_cheat
+          then false
+          else (
+            let pos = { x = x + dx; y = y + dy } in
+            match mat_get dists pos with
+            | None -> false
+            | Some dist ->
+              print_endline @@ "Saving " ^ string_of_int (dist0 - (dist + abs dx + abs dy)) ^ "ps at " ^ Position.to_string { x; y } ^ "(" ^ string_of_int dist0 ^ ") -> " ^ Position.to_string pos ^ "(" ^ string_of_int dist ^ ")";
+              dist0 - (dist + abs dx + abs dy) >= min_save))))
 ;;
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
@@ -187,5 +162,5 @@ let () =
       print_endline "Please specify the part to solve.";
       exit 1
   in
-  print_endline @@ string_of_int @@ Tuple2.uncurry solve parsed_input
+  print_endline @@ string_of_int @@ Tuple3.uncurry solve parsed_input
 ;;

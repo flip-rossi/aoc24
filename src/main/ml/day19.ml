@@ -110,7 +110,7 @@ let string_of_automaton aut =
 ;;
 let part2 patterns designs =
   let patterns, designs =
-    Utils.Str_utils.(List.map patterns ~f:explode, List.map designs ~f:explode)
+    List.map patterns ~f:String.to_list, List.map designs ~f:String.to_list
   in
   let automaton = words_to_automaton patterns in
   print_endline (string_of_automaton automaton);
